@@ -1,3 +1,4 @@
+@extends('layout')
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    
 </head>
 
 <body>
+
+    @section('content')
 
     <div class="container mt-5">
         <div class="row">
@@ -37,7 +38,7 @@
                     <tr id="sid{{$product->id}}">
                         <td>{{$product->pname}}</td>
                         <td>{{$product->mname}}</td>
-                        <td>{{$product->cname}}</td>
+                        <td></td>
                         <td>
                             <a href="javascript:void(0)" onclick="editProduct({{$product->id}})" class="btn-sm btn-dark">Edit</a>
                             <a href="javascript:void(0)" onclick="deleteProduct({{$product->id}})" class="btn-sm btn-dark">Delete</a>
@@ -111,99 +112,12 @@
             </div>
         </div>
     </div>
+    
+    @endsection
 
+    @section('script')
 
-
-    <script>
-        $("#productForm").submit(function(e){
-            e.preventDefault();
-
-            let pname = $("#pname").val();
-            let mname = $("#mname").val();
-            // let cname = $("#cname").val();
-            let _token = $("input[name=_token]").val();
-
-            $.ajax({
-                url: "{{route('product.add')}}",
-                type:"POST",
-                data:{
-                    pname:pname,
-                    mname:mname,
-                    // cname:cname
-                    _token:_token
-                },
-                success:function(response)
-                {
-                    if(response)
-                    {
-                        $("#productTable tbody").prepend('<tr><td>'+ response.pname +'</td><td>'+response.mname+'</td></tr>');
-                        $("#productForm")[0].reset();
-                        $("#productModal").modal('hide');
-                    }
-                }
-            });
-        });
-    </script>
-
-    <script>
-        function editProduct(id)
-        {
-            $.get('/products/'+id,function(product){
-                $("#id").val(product.id);
-                $("#pname2").val(product.pname);
-                $("#mname2").val(product.mname);
-                // $("#cname2").val(product.cname);
-                $("#productEditModal").modal('toggle');
-            });
-        }
-    </script>
-
-    <script>
-        $('#productEditForm').submit(function(e){
-            e.preventDefault()
-            let id = $("#id").val();
-            let pname = $("#pname2").val();
-            let mname = $("#mname2").val();
-            // let cname = $("#cname2").val();
-            let _token = $("input[name=_token]").val();
-
-            $.ajax({
-                url:"{{route('product.update')}}",
-                type:"PUT",
-                data:{
-                    id:id,
-                    pname:pname,
-                    mname:mname,
-                    // cname:cname
-                    _token:_token
-                },
-                success:function(response){
-                    $('#sid' + response.id +' td:nth-child(1)').text(response.pname);
-                    $('#sid' + response.id +' td:nth-child(2)').text(response.mname);
-                    // $('#sid' + response.id +' td:nth-child(3)').text(response.cname);
-                    $("#productEditModal").modal('toggle');
-                    $("#productEditForm")[0].reset();
-                }
-            });
-        });
-    </script>
-
-    <script>
-        function deleteProduct(id)
-        {
-            $.ajax({
-                url:'products/'+id,
-                type:'DELETE',
-                data:{
-                    _token : $("input[name=_token").val()
-                },
-                success:function(response)
-                {
-                    $("#sid"+id).remove();
-                }
-            });
-        }
-    </script>
+    @endsection
 
 </body>
 </html>

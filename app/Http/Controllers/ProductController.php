@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -18,7 +19,6 @@ class ProductController extends Controller
         $product = new Product();
         $product->pname = $request->pname;
         $product->mname = $request->mname;
-        // $product->cname = $request->cname;
         $product->save();
         return response()->json($product);
     }
@@ -34,7 +34,6 @@ class ProductController extends Controller
         $product = Product::find($request->id);
         $product->pname = $request->pname;
         $product->mname = $request->mname;
-        // $product->cname = $request->cname;
         $product->save();
         return response()->json($product);
     }
